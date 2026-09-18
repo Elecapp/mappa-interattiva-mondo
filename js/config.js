@@ -44,14 +44,14 @@ const SITE_CONFIG = {
 
   // Published CSV link for the "descriptions" tab of the thematic-path
   // content sheet. Leave empty ("") to use the local sample data instead.
-  THEME_DESCRIPTIONS_CSV_URL: "",
+  THEME_DESCRIPTIONS_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1ZQVoQQ1trmU8ll2cEbxtoGnx6qtYsWwphS3QGK2oHJphBPPASxROUOSs0xwV72zYosF1ghD6o3Ux/pub?gid=2042257210&single=true&output=csv",
 
   // Local fallback data for thematic path descriptions.
   THEME_DESCRIPTIONS_FALLBACK_CSV_PATH: "data/theme-descriptions.csv",
 
   // Published CSV link for the "posts" tab of the thematic-path content
   // sheet. Leave empty ("") to use the local sample data instead.
-  THEME_POSTS_CSV_URL: "",
+  THEME_POSTS_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1ZQVoQQ1trmU8ll2cEbxtoGnx6qtYsWwphS3QGK2oHJphBPPASxROUOSs0xwV72zYosF1ghD6o3Ux/pub?gid=1374301210&single=true&output=csv",
 
   // Local fallback data for thematic path posts.
   THEME_POSTS_FALLBACK_CSV_PATH: "data/theme-posts.csv",
