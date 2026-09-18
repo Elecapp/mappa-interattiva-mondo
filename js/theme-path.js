@@ -1,15 +1,13 @@
 /**
  * SINGLE THEMATIC PATH PAGE (theme.html?theme=Pilgrimage)
  * --------------------------------------------------------
- * Shows only the items belonging to one theme, draws a chronological
- * route line connecting them on the map (items with a recognizable year
- * are sorted and numbered), and lists them underneath as an itinerary.
+ * Shows only the items belonging to one theme, listed underneath as a
+ * chronological itinerary (items with a recognizable year are sorted and
+ * numbered; undated items are listed separately), plus an optional
+ * description and post feed for the theme.
  */
 
 (async function initThemePathPage() {
-  const mapEl = document.getElementById("theme-map");
-  if (!mapEl) return;
-
   const params = new URLSearchParams(window.location.search);
   const themeName = params.get("theme");
 
@@ -21,6 +19,8 @@
   const postsSectionEl = document.getElementById("theme-posts");
   const postsListEl = document.getElementById("theme-posts-list");
 
+  if (!listEl) return;
+
   function escapeHtml(str) {
     const div = document.createElement("div");
     div.textContent = str ?? "";
@@ -30,29 +30,61 @@
   if (!themeName) {
     if (titleEl) titleEl.textContent = "No theme selected";
     if (introEl) introEl.textContent = "Choose a thematic path from the themes page.";
-    mapEl.style.display = "none";
     return;
   }
 
   if (titleEl) titleEl.textContent = themeName;
 
-  const map = L.map("theme-map", {
-    minZoom: SITE_CONFIG.MAP_MIN_ZOOM,
-    maxZoom: SITE_CONFIG.MAP_MAX_ZOOM,
-  }).setView(SITE_CONFIG.MAP_CENTER, SITE_CONFIG.MAP_ZOOM);
+  // Must match .post-item__panel's transition-duration in css/style.css.
+  const POST_TRANSITION_MS = 250;
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: SITE_CONFIG.MAP_MAX_ZOOM,
-  }).addTo(map);
+  // Expands or collapses one post's panel, animating its height. Each post
+  // toggles independently of the others. Post-transition cleanup runs on a
+  // plain timer (matched to the CSS transition duration) rather than a
+  // "transitionend" listener, since browsers can skip or delay that event
+  // (background tabs, reduced-motion settings, interrupted transitions).
+  function setPostOpen(article, open) {
+    const button = article.querySelector(".post-item__toggle");
+    const panel = article.querySelector(".post-item__panel");
 
-  function numberedIcon(n) {
-    return L.divIcon({
-      className: "route-marker",
-      html: `<span>${n}</span>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
+    if (panel.animationTimer) clearTimeout(panel.animationTimer);
+
+    if (open) {
+      panel.hidden = false;
+      const targetHeight = panel.scrollHeight;
+      panel.style.maxHeight = "0px";
+      // Force a reflow so the browser registers the 0px state before it's
+      // changed again below — otherwise the two assignments collapse into
+      // one and there's nothing to transition.
+      void panel.offsetHeight;
+      panel.style.maxHeight = `${targetHeight}px`;
+      article.classList.add("is-open");
+      button.setAttribute("aria-expanded", "true");
+      // Once open, drop the fixed max-height so the panel can grow
+      // naturally afterwards (e.g. a lazy-loaded image finishing loading).
+      panel.animationTimer = setTimeout(() => {
+        panel.style.maxHeight = "none";
+      }, POST_TRANSITION_MS);
+    } else {
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+      void panel.offsetHeight;
+      panel.style.maxHeight = "0px";
+      article.classList.remove("is-open");
+      button.setAttribute("aria-expanded", "false");
+      panel.animationTimer = setTimeout(() => {
+        panel.hidden = true;
+        panel.style.maxHeight = "";
+      }, POST_TRANSITION_MS);
+    }
+  }
+
+  if (postsListEl) {
+    postsListEl.addEventListener("click", (e) => {
+      const button = e.target.closest(".post-item__toggle");
+      if (!button) return;
+      const article = button.closest(".post-item");
+      const isOpen = button.getAttribute("aria-expanded") === "true";
+      setPostOpen(article, !isOpen);
     });
   }
 
@@ -85,16 +117,24 @@
       const themePosts = ThemeContent.getPostsForTheme(posts, themeName);
       if (themePosts.length > 0) {
         postsListEl.innerHTML = themePosts
-          .map((post) => {
+          .map((post, index) => {
+            const panelId = `theme-post-panel-${index}-${post.id}`;
             const imageMarkup = post.image
-              ? `<img class="post-card__image" src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.style.display='none'">`
+              ? `<img class="post-item__image" src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.style.display='none'">`
               : "";
             return `
-              <article class="post-card">
-                ${imageMarkup}
-                <div class="post-card__body">
-                  ${post.title ? `<h3 class="post-card__title">${escapeHtml(post.title)}</h3>` : ""}
-                  ${post.body ? `<p class="post-card__text">${escapeHtml(post.body)}</p>` : ""}
+              <article class="post-item">
+                <h3 class="post-item__heading">
+                  <button type="button" class="post-item__toggle" aria-expanded="false" aria-controls="${panelId}">
+                    <span class="post-item__title">${escapeHtml(post.title || "Untitled post")}</span>
+                    <span class="post-item__chevron" aria-hidden="true">&#9662;</span>
+                  </button>
+                </h3>
+                <div class="post-item__panel" id="${panelId}" hidden>
+                  <div class="post-item__panel-inner">
+                    ${imageMarkup}
+                    ${post.body ? `<p class="post-item__text">${escapeHtml(post.body)}</p>` : ""}
+                  </div>
                 </div>
               </article>
             `;
@@ -107,72 +147,37 @@
     }
 
     if (themeItems.length === 0) {
-      if (listEl) listEl.innerHTML = `<p class="empty-state">No items are tagged with this theme yet.</p>`;
+      listEl.innerHTML = `<p class="empty-state">No items are tagged with this theme yet.</p>`;
       return;
     }
 
-    // Items with a recognizable year are sorted chronologically and drawn
-    // as a numbered route; undated items are still shown as plain markers.
+    // Items with a recognizable year are sorted chronologically and
+    // numbered; undated items are listed afterwards, unnumbered.
     const dated = themeItems.filter((i) => i.sortYear !== null).sort((a, b) => a.sortYear - b.sortYear);
     const undated = themeItems.filter((i) => i.sortYear === null);
+    const orderedForList = [...dated, ...undated];
 
-    const bounds = [];
+    listEl.innerHTML = orderedForList
+      .map((item) => {
+        const stepLabel = item.sortYear !== null ? dated.indexOf(item) + 1 : null;
+        return `
+          <li class="theme-item-row" data-id="${item.id}">
+            ${stepLabel ? `<span class="step-badge">${stepLabel}</span>` : `<span class="step-badge step-badge--muted">–</span>`}
+            <div>
+              <strong>${item.title}</strong>
+              <span class="theme-item-meta">${item.year ? item.year : "undated"}${item.locationName ? " · " + item.locationName : ""}</span>
+            </div>
+          </li>
+        `;
+      })
+      .join("");
 
-    dated.forEach((item, index) => {
-      const marker = L.marker([item.lat, item.lng], { icon: numberedIcon(index + 1) }).addTo(map);
-      marker.bindTooltip(`${index + 1}. ${item.title} (${item.year})`, { direction: "top" });
-      marker.on("click", () => ItemModal.open(item));
-      bounds.push([item.lat, item.lng]);
-    });
-
-    if (dated.length > 1) {
-      L.polyline(
-        dated.map((i) => [i.lat, i.lng]),
-        { color: "#7a2e2e", weight: 2, dashArray: "6 6", opacity: 0.8 }
-      ).addTo(map);
-    }
-
-    undated.forEach((item) => {
-      const marker = L.circleMarker([item.lat, item.lng], {
-        radius: 7,
-        weight: 2,
-        color: "#7a2e2e",
-        fillColor: "#c9c9c9",
-        fillOpacity: 0.9,
-      }).addTo(map);
-      marker.bindTooltip(item.title, { direction: "top" });
-      marker.on("click", () => ItemModal.open(item));
-      bounds.push([item.lat, item.lng]);
-    });
-
-    if (bounds.length > 0) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: SITE_CONFIG.MAP_MAX_ZOOM });
-    }
-
-    if (listEl) {
-      const orderedForList = [...dated, ...undated];
-      listEl.innerHTML = orderedForList
-        .map((item, i) => {
-          const stepLabel = item.sortYear !== null ? dated.indexOf(item) + 1 : null;
-          return `
-            <li class="theme-item-row" data-id="${item.id}">
-              ${stepLabel ? `<span class="step-badge">${stepLabel}</span>` : `<span class="step-badge step-badge--muted">–</span>`}
-              <div>
-                <strong>${item.title}</strong>
-                <span class="theme-item-meta">${item.year ? item.year : "undated"}${item.locationName ? " · " + item.locationName : ""}</span>
-              </div>
-            </li>
-          `;
-        })
-        .join("");
-
-      listEl.querySelectorAll(".theme-item-row").forEach((row) => {
-        row.addEventListener("click", () => {
-          const item = orderedForList.find((i) => i.id === row.dataset.id);
-          if (item) ItemModal.open(item);
-        });
+    listEl.querySelectorAll(".theme-item-row").forEach((row) => {
+      row.addEventListener("click", () => {
+        const item = orderedForList.find((i) => i.id === row.dataset.id);
+        if (item) ItemModal.open(item);
       });
-    }
+    });
   } catch (err) {
     console.error(err);
     if (statusEl) statusEl.textContent = "Could not load this thematic path.";

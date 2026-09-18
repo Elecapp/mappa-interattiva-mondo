@@ -60,7 +60,7 @@ Thematic paths are not pre-defined — they come entirely from what you type
 in the `themes` column. To create a brand-new path (say, "Diplomacy"),
 simply type `Diplomacy` into the `themes` column for the items that belong
 to it. The next time someone visits the "Thematic Paths" page, "Diplomacy"
-will appear there automatically, with a route connecting its items in
+will appear there automatically, listing its items as an itinerary in
 chronological order.
 
 ## Removing an item
