@@ -19,6 +19,18 @@
  *
  * Until a Google Sheet is connected, the site falls back to the sample data
  * in data/sample-items.csv so you can develop and preview locally.
+ *
+ * HOW TO CONNECT THE THEMATIC PATH CONTENT SHEET (optional)
+ * A second, separate Google Sheet lets the researcher edit the intro text
+ * and post feed shown on each thematic path page (theme.html), without
+ * touching code. That sheet has two tabs:
+ *   - "descriptions": columns theme, description (one row per theme)
+ *   - "posts": columns id, theme, order, title, body, image (several rows
+ *     per theme, shown as cards in "order")
+ * Publish EACH tab separately (File > Share > Publish to web > pick the
+ * specific tab > "Comma separated values (.csv)" > Publish) and paste the
+ * two resulting links below as THEME_DESCRIPTIONS_CSV_URL and
+ * THEME_POSTS_CSV_URL. Leave them empty to use the bundled sample data.
  */
 
 const SITE_CONFIG = {
@@ -29,6 +41,20 @@ const SITE_CONFIG = {
   // Local fallback data (bundled with the site, used when SHEET_CSV_URL is
   // empty or fails to load).
   FALLBACK_CSV_PATH: "data/sample-items.csv",
+
+  // Published CSV link for the "descriptions" tab of the thematic-path
+  // content sheet. Leave empty ("") to use the local sample data instead.
+  THEME_DESCRIPTIONS_CSV_URL: "",
+
+  // Local fallback data for thematic path descriptions.
+  THEME_DESCRIPTIONS_FALLBACK_CSV_PATH: "data/theme-descriptions.csv",
+
+  // Published CSV link for the "posts" tab of the thematic-path content
+  // sheet. Leave empty ("") to use the local sample data instead.
+  THEME_POSTS_CSV_URL: "",
+
+  // Local fallback data for thematic path posts.
+  THEME_POSTS_FALLBACK_CSV_PATH: "data/theme-posts.csv",
 
   // Default map view (roughly centred on late medieval Western/Central
   // Europe). Adjust if your dataset covers a different region.

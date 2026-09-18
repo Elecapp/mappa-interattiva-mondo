@@ -76,3 +76,76 @@ row). It will disappear from the website the next time the page is loaded.
   symbols).
 - If a change doesn't seem to appear on the site, wait a minute or two and
   refresh the page — Google's published link updates on a short delay.
+
+---
+
+# Editing a thematic path's description and posts
+
+Each thematic path page (the one you get to from "Thematic Paths") can also
+show an introductory description and a feed of short posts underneath the
+map. These come from a **second, separate Google Sheet** — the one with
+"descriptions" and "posts" tabs — not the items sheet above.
+
+The content sheet link: **[paste the content Google Sheet link here]**
+
+## Tab 1 — "descriptions"
+
+One row per thematic path.
+
+| Column | What to put there | Example |
+|---|---|---|
+| `theme` | The exact name of the thematic path, spelled identically to how it appears in the `themes` column of the items sheet. | `Pilgrimage` |
+| `description` | A short paragraph introducing the path, shown right under the page title. | *(a few sentences)* |
+
+If a theme has no row here, the page simply shows no description — that's
+fine, nothing breaks.
+
+## Tab 2 — "posts"
+
+Several rows per thematic path — one row per post/card.
+
+| Column | What to put there | Example |
+|---|---|---|
+| `id` | A unique number or short code for the row. Just count up. | `1` |
+| `theme` | The exact name of the thematic path this post belongs to. | `Pilgrimage` |
+| `order` | A number controlling the order the cards appear in (lowest first). | `1`, `2`, `3`… |
+| `title` | The post's title. | `Why pilgrim badges matter` |
+| `body` | The post's text. | *(a short paragraph)* |
+| `image` | Optional. A link to an image for the post. Leave empty for a text-only card. See below for how to get one. | |
+
+If a theme has no rows here, the "Related posts" section simply doesn't
+appear on that page.
+
+## Getting an image link for a post
+
+The easiest way is the same as for items: right-click an image already
+online and choose "Copy image address" / "Copy image link", then paste it
+into `image`.
+
+If your image only exists as a file in Google Drive, you can turn its
+share link into a direct image link without downloading or re-uploading
+anything:
+
+1. Upload the image to Drive, right-click it → **Share** → set access to
+   "Anyone with the link", then **Copy link**. You'll get something like
+   `https://drive.google.com/file/d/FILE_ID/view?usp=sharing`.
+2. Paste that link into a spare column in the sheet, then in the `image`
+   column use a formula to convert it into a direct link, for example:
+
+   ```
+   ="https://drive.google.com/uc?export=view&id="&SUBSTITUTE(SUBSTITUTE(A1,"https://drive.google.com/file/d/",""),"/view?usp=sharing","")
+   ```
+
+   (replace `A1` with the cell holding the Drive share link). The `image`
+   column then contains a plain URL, exactly like the ones you'd copy from
+   a website — the site doesn't need to know it came from a formula.
+
+## Publishing the content sheet
+
+Just like the items sheet, each tab needs to be published **separately**:
+in the content sheet, go to **File → Share → Publish to web**, pick the
+"descriptions" tab, format "Comma-separated values (.csv)", **Publish**,
+then repeat the same steps for the "posts" tab. Your developer needs both
+resulting links once, to paste into the site's configuration — after that,
+any edit and save in either tab appears on the site automatically within a
+minute or two, exactly like the items sheet.

@@ -25,6 +25,7 @@
     <p class="breadcrumb"><a href="themes.html">&larr; All thematic paths</a></p>
     <h1 id="theme-title">Loading…</h1>
     <p id="theme-intro"></p>
+    <div id="theme-description" class="theme-description" hidden></div>
     <p id="theme-status" class="status-text"></p>
   </section>
 
@@ -37,6 +38,11 @@
     <p class="hint">Numbered stops follow the chronological order of dated items on this path; undated items are listed separately.</p>
     <ol id="theme-item-list" class="theme-item-list"></ol>
   </section>
+
+  <section id="theme-posts" class="theme-posts" hidden>
+    <h2>Related posts</h2>
+    <div id="theme-posts-list" class="post-grid"></div>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -47,6 +53,7 @@
 <script src="vendor/papaparse/papaparse.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/data.js"></script>
+<script src="js/theme-content.js"></script>
 <script src="js/modal.js"></script>
 <script src="js/theme-path.js"></script>
 </body>

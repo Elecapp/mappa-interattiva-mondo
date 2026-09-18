@@ -15,8 +15,17 @@
 
   const titleEl = document.getElementById("theme-title");
   const introEl = document.getElementById("theme-intro");
+  const descriptionEl = document.getElementById("theme-description");
   const statusEl = document.getElementById("theme-status");
   const listEl = document.getElementById("theme-item-list");
+  const postsSectionEl = document.getElementById("theme-posts");
+  const postsListEl = document.getElementById("theme-posts-list");
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str ?? "";
+    return div.innerHTML;
+  }
 
   if (!themeName) {
     if (titleEl) titleEl.textContent = "No theme selected";
@@ -49,13 +58,52 @@
 
   try {
     if (statusEl) statusEl.textContent = "Loading path…";
-    const allItems = await DataStore.loadItems();
+    const [allItems, descriptions, posts] = await Promise.all([
+      DataStore.loadItems(),
+      ThemeContent.loadDescriptions(),
+      ThemeContent.loadPosts(),
+    ]);
     if (statusEl) statusEl.textContent = "";
 
     const themeItems = allItems.filter((item) => item.themes.includes(themeName));
 
     if (introEl) {
       introEl.textContent = `${themeItems.length} item${themeItems.length === 1 ? "" : "s"} on this thematic path.`;
+    }
+
+    if (descriptionEl) {
+      const description = ThemeContent.getDescriptionForTheme(descriptions, themeName);
+      if (description) {
+        descriptionEl.textContent = description;
+        descriptionEl.hidden = false;
+      } else {
+        descriptionEl.hidden = true;
+      }
+    }
+
+    if (postsSectionEl && postsListEl) {
+      const themePosts = ThemeContent.getPostsForTheme(posts, themeName);
+      if (themePosts.length > 0) {
+        postsListEl.innerHTML = themePosts
+          .map((post) => {
+            const imageMarkup = post.image
+              ? `<img class="post-card__image" src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.style.display='none'">`
+              : "";
+            return `
+              <article class="post-card">
+                ${imageMarkup}
+                <div class="post-card__body">
+                  ${post.title ? `<h3 class="post-card__title">${escapeHtml(post.title)}</h3>` : ""}
+                  ${post.body ? `<p class="post-card__text">${escapeHtml(post.body)}</p>` : ""}
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+        postsSectionEl.hidden = false;
+      } else {
+        postsSectionEl.hidden = true;
+      }
     }
 
     if (themeItems.length === 0) {
