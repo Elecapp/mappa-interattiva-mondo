@@ -24,7 +24,7 @@
 const SITE_CONFIG = {
   // Paste your published Google Sheet CSV link here. Leave empty ("") to
   // use the local sample data instead.
-  SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1ZQVoQQ1trmU8ll2cEbxtoGnx6qtYsWwphS3QGK2oHJphBPPASxROUOSs0xwV72zYosF1ghD6o3Ux/pubhtml?gid=725912554&single=true",
+  SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1ZQVoQQ1trmU8ll2cEbxtoGnx6qtYsWwphS3QGK2oHJphBPPASxROUOSs0xwV72zYosF1ghD6o3Ux/pub?gid=725912554&single=true&output=csv",
 
   // Local fallback data (bundled with the site, used when SHEET_CSV_URL is
   // empty or fails to load).
