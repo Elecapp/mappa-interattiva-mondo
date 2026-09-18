@@ -10,6 +10,7 @@
  *
  * "posts" tab — several rows per theme, shown as cards in "order":
  *   id, theme, order, title, body, image
+ * ("body" can also be named "text" in the sheet — both are accepted.)
  *
  * Falls back to the bundled sample CSVs in data/ when no sheet is
  * configured or the fetch fails, following the same pattern as
@@ -66,7 +67,7 @@ const ThemeContent = (() => {
       theme: (lower.theme || "").trim(),
       order: Number.isFinite(orderNum) ? orderNum : index,
       title: (lower.title || "").trim(),
-      body: (lower.body || "").trim(),
+      body: (lower.body || lower.text || "").trim(),
       image: (lower.image || "").trim(),
     };
   }

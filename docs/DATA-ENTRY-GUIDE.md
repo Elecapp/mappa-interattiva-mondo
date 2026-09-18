@@ -110,7 +110,7 @@ Several rows per thematic path — one row per post/card.
 | `theme` | The exact name of the thematic path this post belongs to. | `Pilgrimage` |
 | `order` | A number controlling the order the cards appear in (lowest first). | `1`, `2`, `3`… |
 | `title` | The post's title. | `Why pilgrim badges matter` |
-| `body` | The post's text. | *(a short paragraph)* |
+| `body` (or `text`) | The post's text. | *(a short paragraph)* |
 | `image` | Optional. A link to an image for the post. Leave empty for a text-only card. See below for how to get one. | |
 
 If a theme has no rows here, the "Related posts" section simply doesn't
