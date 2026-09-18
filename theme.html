@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thematic Path — Mapping Mobility in Late Medieval Europe</title>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-logo" href="index.html">Mapping Mobility <span>in Late Medieval Europe</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Map</a>
+      <a href="themes.html" class="active">Thematic Paths</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-intro">
+    <p class="breadcrumb"><a href="themes.html">&larr; All thematic paths</a></p>
+    <h1 id="theme-title">Loading…</h1>
+    <p id="theme-intro"></p>
+    <p id="theme-status" class="status-text"></p>
+  </section>
+
+  <section class="map-wrap map-wrap--theme">
+    <div id="theme-map"></div>
+  </section>
+
+  <section class="theme-itinerary">
+    <h2>Itinerary</h2>
+    <p class="hint">Numbered stops follow the chronological order of dated items on this path; undated items are listed separately.</p>
+    <ol id="theme-item-list" class="theme-item-list"></ol>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>Data is maintained in a shared spreadsheet and updates automatically.</p>
+</footer>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="vendor/papaparse/papaparse.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/theme-path.js"></script>
+</body>
+</html>

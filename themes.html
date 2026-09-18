@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thematic Paths — Mapping Mobility in Late Medieval Europe</title>
+<meta name="description" content="Curated thematic itineraries through the mobility map of late medieval Europe.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-logo" href="index.html">Mapping Mobility <span>in Late Medieval Europe</span></a>
+    <nav class="site-nav">
+      <a href="index.html">Map</a>
+      <a href="themes.html" class="active">Thematic Paths</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-intro">
+    <h1>Thematic Paths</h1>
+    <p>Each path groups items around a shared theme — pilgrimage, trade, diplomacy, scholarly travel, forced migration — and traces them chronologically on the map as a route. Choose a path to follow it.</p>
+  </section>
+
+  <p id="themes-status" class="status-text"></p>
+  <section id="theme-list" class="theme-grid"></section>
+</main>
+
+<footer class="site-footer">
+  <p>New thematic paths appear automatically as soon as they are tagged in the spreadsheet — no website changes needed.</p>
+</footer>
+
+<script src="vendor/papaparse/papaparse.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/themes.js"></script>
+</body>
+</html>

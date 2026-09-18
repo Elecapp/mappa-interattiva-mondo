@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapping Mobility in Late Medieval Europe</title>
+<meta name="description" content="An interactive map of people, objects, and journeys across late medieval Europe.">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-logo" href="index.html">Mapping Mobility <span>in Late Medieval Europe</span></a>
+    <nav class="site-nav">
+      <a href="index.html" class="active">Map</a>
+      <a href="themes.html">Thematic Paths</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-intro">
+    <h1>Explore the Map</h1>
+    <p>Click any point to see the item associated with that place — a document, an object, or a recorded journey. Use the filters below to narrow the map by thematic path or search by keyword.</p>
+  </section>
+
+  <section class="map-toolbar">
+    <div class="map-toolbar__group">
+      <label for="theme-filter">Filter by theme</label>
+      <select id="theme-filter">
+        <option value="">All themes</option>
+      </select>
+    </div>
+    <div class="map-toolbar__group">
+      <label for="item-search">Search</label>
+      <input id="item-search" type="text" placeholder="Title, author, or place…">
+    </div>
+    <div class="map-toolbar__status">
+      <span id="item-count"></span>
+      <span id="map-status" class="status-text"></span>
+    </div>
+  </section>
+
+  <section class="map-wrap">
+    <div id="map"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>Data is maintained in a shared spreadsheet and updates automatically. See the <a href="about.html">About</a> page for project details.</p>
+</footer>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="vendor/papaparse/papaparse.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/map.js"></script>
+</body>
+</html>
