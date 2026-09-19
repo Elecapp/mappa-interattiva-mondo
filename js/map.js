@@ -19,12 +19,22 @@
     maxZoom: SITE_CONFIG.MAP_MAX_ZOOM,
   }).setView(SITE_CONFIG.MAP_CENTER, SITE_CONFIG.MAP_ZOOM);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: "abcd",
-    maxZoom: SITE_CONFIG.MAP_MAX_ZOOM,
-  }).addTo(map);
+  // Esri's "Light Gray Canvas" basemap: same light, minimal look as CARTO
+  // Positron, but free to use without an API key (CARTO's raster basemaps
+  // now require one and otherwise stamp "API key required" on every tile).
+  const basemapAttribution =
+    "Esri, HERE, Garmin, &copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, and the GIS community";
+
+  L.tileLayer(
+    "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    { attribution: basemapAttribution, maxZoom: SITE_CONFIG.MAP_MAX_ZOOM }
+  ).addTo(map);
+
+  // Reference layer adds place labels/borders on top of the plain base.
+  L.tileLayer(
+    "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: SITE_CONFIG.MAP_MAX_ZOOM }
+  ).addTo(map);
 
   let markers = [];
   let allItems = [];
