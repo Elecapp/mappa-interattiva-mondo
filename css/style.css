@@ -347,12 +347,34 @@ main {
   margin-bottom: 1rem;
 }
 
-.post-item__text {
-  margin: 0;
+.post-item__text { margin: 0; }
+
+.rich-text__paragraph {
+  margin: 0 0 1rem;
   color: var(--color-ink);
   font-size: 1rem;
   line-height: 1.75;
 }
+.rich-text__paragraph:last-child { margin-bottom: 0; }
+
+.rich-text__heading {
+  margin: 1.25rem 0 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--color-ink);
+}
+.rich-text__heading:first-child { margin-top: 0; }
+
+.rich-text__subheading {
+  margin: 1rem 0 0.4rem;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.rich-text__subheading:first-child { margin-top: 0; }
 
 /* -------------------------------------------------------------
    Item modal

@@ -133,7 +133,7 @@
                 <div class="post-item__panel" id="${panelId}" hidden>
                   <div class="post-item__panel-inner">
                     ${imageMarkup}
-                    ${post.body ? `<p class="post-item__text">${escapeHtml(post.body)}</p>` : ""}
+                    ${post.body ? `<div class="post-item__text">${TextFormat.toHtml(post.body)}</div>` : ""}
                   </div>
                 </div>
               </article>
